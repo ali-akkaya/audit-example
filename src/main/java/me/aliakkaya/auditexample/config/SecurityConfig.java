@@ -20,6 +20,8 @@ public class SecurityConfig   {
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().authenticated())
                 //Couldn't authenticate with basic auth without below configuration.
+                //By default, Spring Security’s HTTP Basic Authentication support is enabled.
+                // However, as soon as any servlet based configuration is provided, HTTP Basic must be explicitly provided.
                 .httpBasic(Customizer.withDefaults())
                 //CSRF disabled for POST PUT request. CSRF is more commonly MVC problem and it is most likely not needed in REST API.
                 .csrf((csrf) -> csrf.disable());
