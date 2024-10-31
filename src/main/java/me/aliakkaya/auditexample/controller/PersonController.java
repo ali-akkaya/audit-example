@@ -15,6 +15,16 @@ public class PersonController {
 
 
 
+
+    @GetMapping("/retrieve/{id}")
+    public Person getPersonById(@PathVariable Long id){
+
+        Person person = personRepository.findById(id).orElseThrow();
+
+
+
+        return personRepository.save(person);
+    }
     @PostMapping("/create")
     public Person createPerson(@RequestBody Person person){
 
@@ -24,6 +34,7 @@ public class PersonController {
 
         return personRepository.save(personToSave);
     }
+
 
     @PutMapping("/update")
     public Person updatePerson(@RequestBody Person person){
