@@ -45,7 +45,7 @@ public class SecurityConfig   {
                 LDAP_URL, LDAP_ROOT_DN);
         adProvider.setConvertSubErrorCodesToExceptions(true);
         adProvider.setUseAuthenticationRequestCredentials(true);
-    //    adProvider.setUserDetailsContextMapper(new MyLdapUserDetailsMapper(ldapClient()));
+        adProvider.setUserDetailsContextMapper(new MyLdapUserDetailsMapper());
         return adProvider;
     }
 
