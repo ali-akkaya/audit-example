@@ -18,7 +18,10 @@ public class SecurityConfig   {
     public SecurityFilterChain web(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated())
+                        .requestMatchers("/person/create").hasRole("ADMIN")
+                        .requestMatchers("/person/retrieve/**").permitAll()
+                        .anyRequest().authenticated()
+                )
                 //Couldn't authenticate with basic auth without below configuration.
                 //By default, Spring Security’s HTTP Basic Authentication support is enabled.
                 // However, as soon as any servlet based configuration is provided, HTTP Basic must be explicitly provided.
@@ -32,13 +35,13 @@ public class SecurityConfig   {
         @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
+                .username("aliakkaya")
                 .password("password")
                 .roles("USER")
                 .build();
 
             UserDetails admin = User.withDefaultPasswordEncoder()
-                    .username("admin")
+                    .username("adminali")
                     .password("password")
                     .roles("ADMIN")
                     .build();
