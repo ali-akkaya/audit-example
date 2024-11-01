@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 
 import java.util.Optional;
 
@@ -14,6 +14,6 @@ public class AuditorAwareImp implements AuditorAware<String> {
     @NonNull
     public Optional<String> getCurrentAuditor() {
         // Can use Spring Security to return currently logged-in user
-         return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername().describeConstable();
+         return ((LdapUserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername().describeConstable();
     }
 }
