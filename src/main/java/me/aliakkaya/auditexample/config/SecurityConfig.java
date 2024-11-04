@@ -15,8 +15,11 @@ public class SecurityConfig   {
 
     @Value("${ldap.url}")
     private String LDAP_URL;
-    @Value("${ldap.domain}")
-    private String LDAP_DOMAIN;
+    @Value("${ldap.domain.com-tr}")
+    private String LDAP_DOMAIN_COM_TR;
+
+    @Value("${ldap.domain.net}")
+    private String LDAP_DOMAIN_NET;
     @Value("${ldap.root-dn}")
     private String LDAP_ROOT_DN;
 
@@ -24,6 +27,7 @@ public class SecurityConfig   {
     public SecurityFilterChain web(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/authenticate/**").permitAll()
                         .requestMatchers("/person/retrieve/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -31,17 +35,28 @@ public class SecurityConfig   {
                 //By default, Spring Security’s HTTP Basic Authentication support is enabled.
                 // However, as soon as any servlet based configuration is provided, HTTP Basic must be explicitly provided.
                 .httpBasic(Customizer.withDefaults())
-                //CSRF disabled for POST PUT request. CSRF is more commonly MVC problem and it is most likely not needed in REST API.
+                //CSRF disabled for POST PUT request. CSRF is more commonly MVC problem, and it is most likely not needed in REST API.
                 .csrf((csrf) -> csrf.disable())
-                .authenticationProvider(ldapAuthenticationProvider())
+                .authenticationProvider(ldapAuthenticationProviderForComTr())
+                .authenticationProvider(ldapAuthenticationProviderForNet())
         ;
 
         return http.build();
     }
 
+    @Bean()
+    public ActiveDirectoryLdapAuthenticationProvider ldapAuthenticationProviderForComTr() {
+        ActiveDirectoryLdapAuthenticationProvider adProvider = new ActiveDirectoryLdapAuthenticationProvider(LDAP_DOMAIN_COM_TR,
+                LDAP_URL, LDAP_ROOT_DN);
+        adProvider.setConvertSubErrorCodesToExceptions(true);
+        adProvider.setUseAuthenticationRequestCredentials(true);
+        adProvider.setUserDetailsContextMapper(new MyLdapUserDetailsMapper());
+        return adProvider;
+    }
+
     @Bean
-    public ActiveDirectoryLdapAuthenticationProvider ldapAuthenticationProvider() {
-        ActiveDirectoryLdapAuthenticationProvider adProvider = new ActiveDirectoryLdapAuthenticationProvider(LDAP_DOMAIN,
+    public ActiveDirectoryLdapAuthenticationProvider ldapAuthenticationProviderForNet() {
+        ActiveDirectoryLdapAuthenticationProvider adProvider = new ActiveDirectoryLdapAuthenticationProvider(LDAP_DOMAIN_NET,
                 LDAP_URL, LDAP_ROOT_DN);
         adProvider.setConvertSubErrorCodesToExceptions(true);
         adProvider.setUseAuthenticationRequestCredentials(true);

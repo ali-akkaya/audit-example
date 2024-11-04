@@ -24,7 +24,7 @@ public class MyLdapUserDetailsMapper extends LdapUserDetailsMapper {
             user.setName(ctx.getAttributes().get("givenName").get().toString());
             user.setSurname(ctx.getAttributes().get("sn").get().toString());
             user.setNameSurname(ctx.getAttributes().get("cn").get().toString());
-            user.setSicil(Long.valueOf(ctx.getAttributes().get("extensionattribute3").get().toString()));
+     //       user.setSicil(Long.valueOf(ctx.getAttributes().get("extensionattribute3").get().toString()));
 
             NamingEnumeration<?> members = ctx.getAttributes().get("memberof").getAll();
             while (members.hasMore()) {            // Iteratorda daha fazla öğe var mı kontrolü.
