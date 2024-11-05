@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Setter
@@ -28,9 +29,8 @@ public class LDAPUser implements UserDetails {
 
     private String surname;
     private String nameSurname;
-    private Long sicil;
-    private Boolean isAdmin = false;
-
+    private Long registerNumber;
+    private List<String> groups;
 
     @Transient
     private Collection<GrantedAuthority> authorities;

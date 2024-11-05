@@ -6,10 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
-
-import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import java.util.Collection;
+import java.util.List;
+
+import static me.aliakkaya.auditexample.converter.NamingEnumerationListConverter.convertNamingEnumerationToList;
 
 public class MyLdapUserDetailsMapper extends LdapUserDetailsMapper {
     @Override
@@ -24,15 +25,15 @@ public class MyLdapUserDetailsMapper extends LdapUserDetailsMapper {
             user.setName(ctx.getAttributes().get("givenName").get().toString());
             user.setSurname(ctx.getAttributes().get("sn").get().toString());
             user.setNameSurname(ctx.getAttributes().get("cn").get().toString());
-     //       user.setSicil(Long.valueOf(ctx.getAttributes().get("extensionattribute3").get().toString()));
+            user.setRegisterNumber(Long.valueOf(ctx.getAttributes().get("extensionattribute3").get().toString()));
 
-            NamingEnumeration<?> members = ctx.getAttributes().get("memberof").getAll();
-            while (members.hasMore()) {            // Iteratorda daha fazla öğe var mı kontrolü.
-                if(members.next().toString().contains("bulut") ) {
-                    user.setIsAdmin(true);
-                    break;
-                }
-            }
+            List<String> memberOfAttr =  convertNamingEnumerationToList(ctx.getAttributes().get("memberof").getAll()).stream().map((group)->{
+                String groupName;
+                String[] parts = group.toString().split(",");
+                groupName = parts[0].substring(3).trim();
+                return groupName;
+            }).toList();
+            user.setGroups(memberOfAttr);
 
         } catch (NamingException e) {
             throw new RuntimeException(e);

@@ -19,7 +19,7 @@ public class LDAPController {
 
 
     @GetMapping("/user")
-    public LDAPUser getUserBySicilNo(@RequestParam Long sicilNo){
-      return  ldapService.findLDAPUserBySicilNo(sicilNo);
+    public LDAPUser getUserByRegisterNo(@RequestParam Long registerNo){
+      return  ldapService.findLDAPUserByRegisterNo(registerNo);
     }
 }
