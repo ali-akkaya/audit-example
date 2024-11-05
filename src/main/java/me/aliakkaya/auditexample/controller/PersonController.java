@@ -4,6 +4,7 @@ package me.aliakkaya.auditexample.controller;
 import lombok.AllArgsConstructor;
 import me.aliakkaya.auditexample.entity.Person;
 import me.aliakkaya.auditexample.repository.IPersonRepository;
+import me.aliakkaya.auditexample.utils.UpdateUtil;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,11 +42,7 @@ public class PersonController {
 
         Person personToSave = personRepository.findById(person.getId()).orElseThrow();
 
-        if(!person.getName().isEmpty())
-            personToSave.setName(person.getName());
-
-        if(!person.getSurname().isEmpty())
-            personToSave.setSurname(person.getSurname());
+        UpdateUtil.updateObject(personToSave, person);
 
         return personRepository.save(personToSave);
     }
